@@ -76,7 +76,20 @@ async function loginUserController(req,res) {
 
 async function logoutUserController(req,res) {
     const token = req.cookies.token
+
+   if (!token) {
+    return res.status(400).json({
+        message: "No token found"
+    });
+}
+
+await tokenBlacklistModel.create({ token });
+
+res.clearCookie('token');
+res.status(200).json({
+    message: 'Logout successful'
+});
     
 }
 
-module.exports = {registerUserController, loginUserController}
+module.exports = {registerUserController, loginUserController, logoutUserController}
