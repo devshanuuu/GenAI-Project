@@ -92,4 +92,17 @@ res.status(200).json({
     
 }
 
-module.exports = {registerUserController, loginUserController, logoutUserController}
+async function getMeController(req,res) {
+    const user = await userModel.findById(req.user.id)
+
+    res.status(200).json({
+        message: 'User info retrieved successfully',
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email
+        }
+    })
+}
+
+module.exports = {registerUserController, loginUserController, logoutUserController , getMeController}
