@@ -1,4 +1,4 @@
-import {RouterProvider} from 'react-router'
+import {RouterProvider} from 'react-router' // RouterProvider is used to provide the router instance to the application
 import {router} from './app.routes.jsx'
 
 function App() {

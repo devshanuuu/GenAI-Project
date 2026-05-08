@@ -1,7 +1,12 @@
 import React from 'react'
 
+// useNavigate is used to navigate to different routes programmatically and Link is used to create links to different routes
+import { useNavigate, Link } from 'react-router' 
+
 const Register = () => {
  
+  const navigate = useNavigate()
+
   const handleSubmit = (e) => {
     e.preventDefault()
   }
@@ -27,6 +32,7 @@ const Register = () => {
                 </div>
                 <button className='button primary-button'>Register</button>                
             </form>
+            <p>Already have an account? <Link to={"/login"}>Login</Link></p>
         </div>
     </main>
   )
