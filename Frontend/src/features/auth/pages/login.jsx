@@ -1,14 +1,25 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 // useNavigate is used to navigate to different routes programmatically and Link is used to create links to different routes
 import { useNavigate, Link } from 'react-router'
 import '../auth.form.scss'
+import { useAuth } from '../hooks/useAuth.js'
 
 const Login = () => {
-  
-    const handleSubmit = (e) => {
+    
+    const { loading, handleLogin } = useAuth()
+    
+    const [ email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const handleSubmit = async(e) => {
     e.preventDefault()
+    handleLogin({email, password})
   }
+
+    if(loading) {
+        return (<main><h1>Loading...</h1></main>)
+    }
   
     return (
      
