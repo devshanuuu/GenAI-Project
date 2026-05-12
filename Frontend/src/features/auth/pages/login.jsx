@@ -8,13 +8,15 @@ import { useAuth } from '../hooks/useAuth.js'
 const Login = () => {
     
     const { loading, handleLogin } = useAuth()
+    const navigate = useNavigate()
     
     const [ email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const handleSubmit = async(e) => {
     e.preventDefault()
-    handleLogin({email, password})
+    await handleLogin({email, password})
+    navigate('/')
   }
 
     if(loading) {
@@ -30,11 +32,11 @@ const Login = () => {
             <form onSubmit = {handleSubmit}>
                 <div className="input-group">
                     <label htmlFor='email'>Email</label>
-                    <input type ='email' id ='email' name='email' placeholder='Enter Email'/>
+                    <input onChange = {(e)=>{ setEmail(e.target.value) }}type ='email' id ='email' name='email' placeholder='Enter Email'/>
                 </div>
                 <div className="input-group">
                     <label htmlFor='password'>Password</label>
-                    <input type = 'password' id = 'password' name = 'password' placeholder = 'Enter Password'/>
+                    <input onChange = {(e)=>{ setPassword(e.target.value) }}type = 'password' id = 'password' name = 'password' placeholder = 'Enter Password'/>
                 </div>
                 <button className='button primary-button'>Login</button>                
             </form>

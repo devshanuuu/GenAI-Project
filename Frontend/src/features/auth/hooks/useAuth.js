@@ -9,23 +9,32 @@ export const useAuth = () => {
     // This function will handle the login process. It will call the login function from the auth.api.js file, which makes an API request to the backend to authenticate the user. If the login is successful, it will set the user state with the returned user data and update the loading state accordingly.
     const handleLogin = async ({email, password}) => {
         setLoading(true)
+        try {
         const data = await login({email, password})
+        console.log(data)   
         setUser(data.user)
-        setLoading(false)
+        } 
+         catch (err) {
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleRegister = async ({username, email, password}) => {
         setLoading(true)
-        const data = await register({username, email, password})
+        try {const data = await register({username, email, password})
         setUser(data.user)
-        setLoading(false)
+        } catch (err) {
+        } finally {
+        setLoading(false)}
     }
 
     const handleLogout = async () => {
         setLoading(true)
-        const data = await logout()
-        setUser(null)
-        setLoading(false)
+        try {const data = await logout()
+        setUser(null)} catch (err) {
+        } finally {
+        setLoading(false)}
     }
 
     return {user, loading, handleLogin, handleRegister, handleLogout}
