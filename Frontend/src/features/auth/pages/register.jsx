@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import useAuth from '../hooks/useAuth.js'
+import {useAuth} from '../hooks/useAuth.js'
 
 // useNavigate is used to navigate to different routes programmatically and Link is used to create links to different routes
 import { useNavigate, Link } from 'react-router' 

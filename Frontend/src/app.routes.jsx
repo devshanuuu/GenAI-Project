@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom"; // createBrowserRouter is used to create a router instance for our application
 import Login from "./features/auth/pages/login";
 import Register from "./features/auth/pages/register";
+import Protected from "./features/auth/component/protected.jsx";
 
 export const router = createBrowserRouter([
     {
@@ -13,6 +14,6 @@ export const router = createBrowserRouter([
     },
     {
         path: '/',
-        element: <protected><h1>Home</h1></protected>
+        element: <Protected><h1>Home</h1></Protected>
     }
 ])

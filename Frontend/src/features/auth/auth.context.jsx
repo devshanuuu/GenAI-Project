@@ -7,7 +7,7 @@ export const AuthContext = createContext()
 // This component will wrap your whole app. It will provide the authentication state to all components that need it. 
 export const AuthProvider = ({ children }) => {
          const [user, setUser] = useState(null)
-         const [loading, setLoading] = useState(false)
+         const [loading, setLoading] = useState(true)
 
          return (
             <AuthContext.Provider value = {{user, setUser, loading, setLoading}}>
