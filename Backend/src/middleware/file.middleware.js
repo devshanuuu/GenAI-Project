@@ -1,7 +1,7 @@
 const multer = require('multer');
 
 const upload = multer({
-    storage: muter.memoryStorage(), // This will store the uploaded file in memory as a buffer
+    storage: multer.memoryStorage(), // This will store the uploaded file in memory as a buffer
     limits: {
         filesize: 3 * 1024 * 1024 // 3MB file size limit
     }
