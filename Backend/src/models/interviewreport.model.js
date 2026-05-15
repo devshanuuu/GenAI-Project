@@ -16,7 +16,7 @@ const technicalQuestionSchema = new mongoose.Schema({
     }
 }, {_id: false})
 
-const behavioralQuestionSchema = new mongoose.Schema({
+const behaviouralQuestionSchema = new mongoose.Schema({
     question: {
         type: String,
         required: true
@@ -70,13 +70,8 @@ const interviewReportSchema = new mongoose.Schema({
     selfDescription: {
         type: String
     },
-    matchScore: {
-        type: Number,
-        min: 0,
-        max: 100
-    },
     technicalQuestions: [technicalQuestionSchema],
-    behavioralQuestions: [behavioralQuestionSchema],
+    behaviouralQuestions: [behaviouralQuestionSchema],
     skillGaps: [skillGapSchema],
     preparationPlan: [preparationPlanSchema],
     user: {

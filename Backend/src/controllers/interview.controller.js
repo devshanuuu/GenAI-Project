@@ -6,19 +6,19 @@ async function genInterviewReportController(req, res) {
     
     const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText()
 
-    const {selfDesciption, jobDescription} = req.body
+    const {jobDescription, selfDescription} = req.body
 
     const interviewReportByAi = await generateInterviewReport({
         resume: resumeContent.text,
-        selfDesciption,
-        jobDescription
+        jobDescription,
+        selfDescription
     })
 
     const interviewReport = await interviewReportModel.create({
         user: req.user.id,
         resume: resumeContent.text,
-        selfDescription,
         jobDescription,
+        selfDescription,
         ...interviewReportByAi
     })
 
