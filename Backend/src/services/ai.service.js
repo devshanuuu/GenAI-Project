@@ -19,7 +19,10 @@ Self Description: ${selfDescription}`
             responseSchema: {
                 type: "object",
                 properties: {
-                    technicalQuestions: {
+                  jobTitle: {
+                    type: "string"
+                      },
+                      technicalQuestions: {
                         type: "array",
                         items: {
                             type: "object",
@@ -67,7 +70,7 @@ Self Description: ${selfDescription}`
                         }
                     }
                 },
-                required: ["technicalQuestions", "behaviouralQuestions", "skillGaps", "preparationPlan"]
+                required: ["jobTitle", "technicalQuestions", "behaviouralQuestions", "skillGaps", "preparationPlan"]
             }
         }
     })

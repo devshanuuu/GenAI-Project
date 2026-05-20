@@ -60,6 +60,11 @@ const preparationPlanSchema = new mongoose.Schema({
 
 // The main schema for the interview report, which includes all the fields and sub-schemas defined above. 
 const interviewReportSchema = new mongoose.Schema({
+    jobTitle: {
+        type: String,
+        required: true
+    },
+    
     jobDescription: {
         type: String,
         required: true
