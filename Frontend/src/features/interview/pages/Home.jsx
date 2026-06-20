@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router'
 const Home = () => {
   const navigate = useNavigate()
 
-  const { loading, generateReport} = useInterview()
+  const { loading, generateReport, reports} = useInterview()
   const[jobDescription, setJobDescription] = useState("")
   const[selfDescription, setSelfDescription] = useState("")
 
@@ -115,6 +115,8 @@ const Home = () => {
                     </button>
                 </div>
             </div>
+
+            
 
             {/* Page Footer */}
             <footer className='page-footer'>
