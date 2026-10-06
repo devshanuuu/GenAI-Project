@@ -10,11 +10,45 @@ const Home = () => {
     const { loading, generateReport, reports } = useInterview()
     const [jobDescription, setJobDescription] = useState("")
     const [selfDescription, setSelfDescription] = useState("")
+    const [selectedFileName, setSelectedFileName] = useState(null)
+    const [uploadError, setUploadError] = useState(null)
 
     const resumeInputRef = useRef()
 
+    const handleFileChange = (e) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                setUploadError('Only PDF files are supported.')
+                setSelectedFileName(null)
+                e.target.value = ''
+                return
+            }
+            if (file.size > 3 * 1024 * 1024) {
+                setUploadError('File exceeds 3MB limit.')
+                setSelectedFileName(null)
+                e.target.value = ''
+                return
+            }
+            setUploadError(null)
+            setSelectedFileName(file.name)
+        } else {
+            setSelectedFileName(null)
+        }
+    }
+
+    const handleRemoveFile = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        setSelectedFileName(null)
+        setUploadError(null)
+        if (resumeInputRef.current) {
+            resumeInputRef.current.value = ''
+        }
+    }
+
     const handleGenerateReport = async () => {
-        const resumeFile = resumeInputRef.current.files[0]
+        const resumeFile = resumeInputRef.current?.files?.[0]
         const data = await generateReport({ jobDescription, selfDescription, resumeFile })
         if (data?._id) {
             navigate(`/interview/${data._id}`)
@@ -70,14 +104,43 @@ const Home = () => {
                                 Upload Resume
                                 <span className='badge badge--best'>Best Results</span>
                             </label>
-                            <label className='dropzone' htmlFor='resume'>
+                            <label className={`dropzone ${selectedFileName ? 'dropzone--uploaded' : ''}`} htmlFor='resume'>
                                 <span className='dropzone__icon'>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
+                                    {selectedFileName ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3fb950" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
+                                    )}
                                 </span>
-                                <p className='dropzone__title'>Click to upload or drag &amp; drop</p>
-                                <p className='dropzone__subtitle'>PDF (Max 3MB)</p>
-                                <input ref={resumeInputRef} hidden type='file' id='resume' name='resume' accept='.pdf,application/pdf' />
+                                {selectedFileName ? (
+                                    <div className='dropzone__file-info'>
+                                        <p className='dropzone__filename'>{selectedFileName}</p>
+                                        <p className='dropzone__success-label'>PDF attached successfully</p>
+                                        <button type='button' onClick={handleRemoveFile} className='dropzone__remove-btn'>
+                                            Change / Remove
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <p className='dropzone__title'>Click to upload or drag &amp; drop</p>
+                                        <p className='dropzone__subtitle'>PDF (Max 3MB)</p>
+                                    </>
+                                )}
+                                <input
+                                    ref={resumeInputRef}
+                                    hidden
+                                    type='file'
+                                    id='resume'
+                                    name='resume'
+                                    accept='.pdf,application/pdf'
+                                    onChange={handleFileChange}
+                                />
                             </label>
+                            {uploadError && (
+                                <p style={{ color: '#ff4d4d', fontSize: '0.8rem', margin: '0 0 0 0.25rem' }}>
+                                    {uploadError}
+                                </p>
+                            )}
                         </div>
 
                         {/* OR Divider */}

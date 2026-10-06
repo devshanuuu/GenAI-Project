@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import '../style/interview.scss'
 import { useInterview } from '../hooks/useinterview.js'
+import { useNavigate } from 'react-router'
 
 const NAV_ITEMS = [
     { id: 'technical', label: 'Technical Questions', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>) },
@@ -63,6 +64,7 @@ const RoadMapDay = ({ day }) => (
 // ── Main Component ────────────────────────────────────────────────────────────
 const Interview = () => {
 
+    const navigate = useNavigate()
     const [activeNav, setActiveNav] = useState('technical')
     const { report, loading } = useInterview()
 
@@ -76,6 +78,29 @@ const Interview = () => {
 
     return (
         <div className='interview-page'>
+            {/* Top Navigation Bar / Header */}
+            <header className='interview-top-header'>
+                <div className='interview-top-header__left'>
+                    <button onClick={() => navigate('/')} className='back-to-home-btn'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12" />
+                            <polyline points="12 19 5 12 12 5" />
+                        </svg>
+                        <span>Back to Home</span>
+                    </button>
+                    <div className='header-separator' />
+                    <h1 className='interview-title'>
+                        Interview Strategy: <span className='highlight'>{report.jobTitle}</span>
+                    </h1>
+                </div>
+
+                <div className='interview-top-header__right'>
+                    <button onClick={() => navigate('/')} className='new-plan-btn'>
+                        + New Plan
+                    </button>
+                </div>
+            </header>
+
             <div className='interview-layout'>
 
                 {/* ── Left Nav ── */}
