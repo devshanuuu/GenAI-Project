@@ -1,26 +1,27 @@
 import React from 'react'
 import { useRef, useState } from 'react'
 import '../style/home.scss'
-import {useInterview} from '../hooks/useinterview.js'
+import { useInterview } from '../hooks/useinterview.js'
 import { useNavigate } from 'react-router'
 
 const Home = () => {
-  const navigate = useNavigate()
+    const navigate = useNavigate()
 
-  const { loading, generateReport, reports} = useInterview()
-  const[jobDescription, setJobDescription] = useState("")
-  const[selfDescription, setSelfDescription] = useState("")
+    const { loading, generateReport, reports } = useInterview()
+    const [jobDescription, setJobDescription] = useState("")
+    const [selfDescription, setSelfDescription] = useState("")
 
-  const resumeInputRef = useRef()
+    const resumeInputRef = useRef()
 
-  const handleGenerateReport = async () => {
-        const resumeFile = resumeInputRef.current.files[ 0 ]
+    const handleGenerateReport = async () => {
+        const resumeFile = resumeInputRef.current.files[0]
         const data = await generateReport({ jobDescription, selfDescription, resumeFile })
-        navigate(`/interview/${data._id}`)
+        if (data?._id) {
+            navigate(`/interview/${data._id}`)
+        }
     }
  
- 
-  return (
+    return (
         <div className='home-page'>
 
             {/* Page Header */}
@@ -74,8 +75,8 @@ const Home = () => {
                                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
                                 </span>
                                 <p className='dropzone__title'>Click to upload or drag &amp; drop</p>
-                                <p className='dropzone__subtitle'>PDF or DOCX (Max 5MB)</p>
-                                <input ref={resumeInputRef} hidden type='file' id='resume' name='resume' accept='.pdf,.docx' />
+                                <p className='dropzone__subtitle'>PDF (Max 3MB)</p>
+                                <input ref={resumeInputRef} hidden type='file' id='resume' name='resume' accept='.pdf,application/pdf' />
                             </label>
                         </div>
 
@@ -109,14 +110,31 @@ const Home = () => {
                     <span className='footer-info'>AI-Powered Strategy Generation &bull; Approx 30s</span>
                     <button
                         onClick={handleGenerateReport}
-                        className='generate-btn'>
+                        className='generate-btn'
+                        disabled={loading}
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" /></svg>
-                        Generate My Interview Strategy
+                        {loading ? 'Generating Strategy...' : 'Generate My Interview Strategy'}
                     </button>
                 </div>
             </div>
 
-            
+            {/* Recent Reports */}
+            {reports && reports.length > 0 && (
+                <div className='recent-reports'>
+                    <h2>Recent Reports</h2>
+                    <div className='reports-list'>
+                        {reports.map((r) => (
+                            <div key={r._id} className='report-item' onClick={() => navigate(`/interview/${r._id}`)}>
+                                <h3>{r.jobTitle || 'Untitled Role'}</h3>
+                                <p style={{ fontSize: '0.8rem', color: '#7d8590' }}>
+                                    {new Date(r.createdAt).toLocaleDateString()}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Page Footer */}
             <footer className='page-footer'>
@@ -127,6 +145,5 @@ const Home = () => {
         </div>
     )
 }
-
 
 export default Home

@@ -1,50 +1,51 @@
-import React, {useState} from 'react'
-
-// useNavigate is used to navigate to different routes programmatically and Link is used to create links to different routes
+import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router'
 import '../auth.form.scss'
 import { useAuth } from '../hooks/useAuth.js'
 
 const Login = () => {
     
-    const { loading, handleLogin } = useAuth()
+    const { loading, error, handleLogin } = useAuth()
     const navigate = useNavigate()
     
-    const [ email, setEmail] = useState('')
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const handleSubmit = async(e) => {
-    e.preventDefault()
-    await handleLogin({email, password})
-    navigate('/')
-  }
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const success = await handleLogin({ email, password })
+        if (success) {
+            navigate('/')
+        }
+    }
 
-    if(loading) {
+    if (loading) {
         return (<main><h1>Loading...</h1></main>)
     }
   
     return (
-     
-    <main>
-        <div className='form-container'>
-            <h1>Login</h1>
+        <main>
+            <div className='form-container'>
+                <h1>Login</h1>
 
-            <form onSubmit = {handleSubmit}>
-                <div className="input-group">
-                    <label htmlFor='email'>Email</label>
-                    <input onChange = {(e)=>{ setEmail(e.target.value) }}type ='email' id ='email' name='email' placeholder='Enter Email'/>
-                </div>
-                <div className="input-group">
-                    <label htmlFor='password'>Password</label>
-                    <input onChange = {(e)=>{ setPassword(e.target.value) }}type = 'password' id = 'password' name = 'password' placeholder = 'Enter Password'/>
-                </div>
-                <button className='button primary-button'>Login</button>                
-            </form>
+                {error && <p style={{ color: '#ff4d4d', fontSize: '0.9rem' }}>{error}</p>}
 
-            <p>Don't have an account? <Link to={"/register"}>Register</Link></p>
-        </div>
-    </main>
-  )
+                <form onSubmit={handleSubmit}>
+                    <div className="input-group">
+                        <label htmlFor='email'>Email</label>
+                        <input onChange={(e) => { setEmail(e.target.value) }} type='email' id='email' name='email' placeholder='Enter Email' required />
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor='password'>Password</label>
+                        <input onChange={(e) => { setPassword(e.target.value) }} type='password' id='password' name='password' placeholder='Enter Password' required />
+                    </div>
+                    <button className='button primary-button'>Login</button>                
+                </form>
+
+                <p>Don't have an account? <Link to={"/register"}>Register</Link></p>
+            </div>
+        </main>
+    )
 }
 
 export default Login

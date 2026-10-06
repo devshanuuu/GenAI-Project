@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import '../style/interview.scss'
 import { useInterview } from '../hooks/useinterview.js'
-import { useParams } from 'react-router'
 
 const NAV_ITEMS = [
     { id: 'technical', label: 'Technical Questions', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>) },
@@ -47,7 +46,7 @@ const RoadMapDay = ({ day }) => (
     <div className='roadmap-day'>
         <div className='roadmap-day__header'>
             <span className='roadmap-day__badge'>Day {day.day}</span>
-            <h3 className='roadmap-day__focus'>{day.focus}</h3>
+            <h3 className='roadmap-day__focus'>{day.focusArea}</h3>
         </div>
 
         <ul className='roadmap-day__tasks'>
@@ -65,16 +64,7 @@ const RoadMapDay = ({ day }) => (
 const Interview = () => {
 
     const [activeNav, setActiveNav] = useState('technical')
-
-    const { report, getReportById, loading } = useInterview()
-
-    const { interviewId } = useParams()
-
-    useEffect(() => {
-        if (interviewId) {
-            getReportById(interviewId)
-        }
-    }, [interviewId])
+    const { report, loading } = useInterview()
 
     if (loading || !report) {
         return (

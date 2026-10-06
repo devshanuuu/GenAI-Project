@@ -1,52 +1,67 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../auth.context.jsx';
-import {login, register, logout, getMe} from '../services/auth.api.js';
+import { login, register, logout, getMe } from '../services/auth.api.js';
 
 export const useAuth = () => {
-    const context = useContext(AuthContext) // useContext is a React hook that allows you to access the context value from the nearest matching Provider above in the component tree. In this case, it allows you to access the authentication state and functions provided by the AuthProvider component.
-    const {user, setUser, loading, setLoading} = context 
+    const context = useContext(AuthContext);
+    const { user, setUser, loading, setLoading } = context;
+    const [error, setError] = useState(null);
 
-    // This function will handle the login process. It will call the login function from the auth.api.js file, which makes an API request to the backend to authenticate the user. If the login is successful, it will set the user state with the returned user data and update the loading state accordingly.
-    const handleLogin = async ({email, password}) => {
-        setLoading(true)
+    const handleLogin = async ({ email, password }) => {
+        setLoading(true);
+        setError(null);
         try {
-        const data = await login({email, password})
-        console.log(data)   
-        setUser(data.user)
-        } 
-         catch (err) {
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    const handleRegister = async ({username, email, password}) => {
-        setLoading(true)
-        try {const data = await register({username, email, password})
-        setUser(data.user)
+            const data = await login({ email, password });
+            setUser(data.user);
+            return true;
         } catch (err) {
+            setError(err.response?.data?.message || 'Login failed');
+            return false;
         } finally {
-        setLoading(false)}
-    }
+            setLoading(false);
+        }
+    };
+
+    const handleRegister = async ({ username, email, password }) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const data = await register({ username, email, password });
+            setUser(data.user);
+            return true;
+        } catch (err) {
+            setError(err.response?.data?.message || 'Registration failed');
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleLogout = async () => {
-        setLoading(true)
-        try {const data = await logout()
-        setUser(null)} catch (err) {
+        setLoading(true);
+        try {
+            await logout();
+            setUser(null);
+        } catch (err) {
+            console.error(err);
         } finally {
-        setLoading(false)}
-    }
-    
-    useEffect(() => {
-        const fetchUser = async() => {
-            try { const data = await getMe()
-            setUser(data.user) }catch (err) 
-            {}finally{
-            setLoading(false)}
+            setLoading(false);
         }
-        fetchUser()
-    }, [])
+    };
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const data = await getMe();
+                setUser(data.user);
+            } catch (err) {
+                // Not logged in or expired token
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUser();
+    }, []);
 
-    return {user, loading, handleLogin, handleRegister, handleLogout}
-}
+    return { user, loading, error, handleLogin, handleRegister, handleLogout };
+};
